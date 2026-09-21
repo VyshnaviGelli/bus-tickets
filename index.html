@@ -1,0 +1,1190 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BusGo - Bus Ticket Booking</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #071952, #088395, #35A29F);
+            color: white;
+        }
+
+        /* HEADER */
+
+        header {
+            height: 70px;
+            padding: 0 7%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD93D;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #FFD93D;
+        }
+
+
+        /* HERO */
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .hero h1 {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 span {
+            color: #FFD93D;
+        }
+
+        .hero p {
+            color: #ddd;
+            font-size: 17px;
+        }
+
+
+        /* SEARCH BOX */
+
+        .search-box {
+            width: 90%;
+            max-width: 1100px;
+            margin: 20px auto 40px;
+
+            padding: 25px;
+
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(15px);
+
+            border-radius: 20px;
+
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .search-fields {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) auto;
+            gap: 15px;
+        }
+
+        .field {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            color: #333;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            background: transparent;
+        }
+
+        .search-btn {
+            border: none;
+            padding: 0 25px;
+            border-radius: 10px;
+
+            background: #FFD93D;
+            color: #222;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+
+
+        /* MAIN */
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+
+        /* BUS CARDS */
+
+        .bus-list {
+            display: grid;
+            gap: 18px;
+        }
+
+        .bus-card {
+            background: rgba(255,255,255,0.1);
+
+            padding: 22px;
+
+            border-radius: 18px;
+
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+
+            align-items: center;
+
+            transition: 0.3s;
+
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bus-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.16);
+        }
+
+        .bus-name h3 {
+            margin-bottom: 7px;
+        }
+
+        .bus-name p {
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        .bus-info {
+            text-align: center;
+        }
+
+        .bus-info strong {
+            font-size: 18px;
+        }
+
+        .bus-info p {
+            color: #ccc;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .price {
+            color: #FFD93D;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .select-bus {
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            background: #FFD93D;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        /* BOOKING AREA */
+
+        #bookingSection {
+            display: none;
+
+            margin-top: 30px;
+            margin-bottom: 50px;
+
+            background: rgba(255,255,255,0.1);
+
+            padding: 30px;
+
+            border-radius: 20px;
+        }
+
+        .booking-title {
+            margin-bottom: 25px;
+            color: #FFD93D;
+        }
+
+
+        /* SEAT LAYOUT */
+
+        .seat-area {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .bus-front {
+            width: 100%;
+            padding: 10px;
+
+            background: rgba(255,255,255,0.1);
+
+            border-radius: 10px;
+
+            text-align: right;
+
+            margin-bottom: 20px;
+
+            color: #ccc;
+        }
+
+        .seats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 45px)
+                25px
+                repeat(2, 45px);
+
+            gap: 12px;
+
+            justify-content: center;
+        }
+
+        .seat {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 8px 8px 5px 5px;
+
+            background: #536878;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 12px;
+
+            transition: 0.2s;
+        }
+
+        .seat:hover {
+            transform: scale(1.1);
+        }
+
+        .seat.selected {
+            background: #FFD93D;
+            color: #222;
+        }
+
+        .seat.occupied {
+            background: #E74C3C;
+            cursor: not-allowed;
+        }
+
+
+        /* LEGEND */
+
+        .legend {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 25px;
+
+            margin: 25px 0;
+        }
+
+        .legend-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            font-size: 13px;
+        }
+
+        .legend-box {
+            width: 18px;
+            height: 18px;
+
+            border-radius: 4px;
+        }
+
+        .available {
+            background: #536878;
+        }
+
+        .selected {
+            background: #FFD93D;
+        }
+
+        .booked {
+            background: #E74C3C;
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            max-width: 600px;
+
+            margin: 30px auto 0;
+
+            background: rgba(0,0,0,0.2);
+
+            padding: 20px;
+
+            border-radius: 15px;
+        }
+
+        .summary p {
+            margin: 10px 0;
+        }
+
+        .summary strong {
+            color: #FFD93D;
+        }
+
+        .total {
+            font-size: 25px;
+            margin-top: 20px;
+        }
+
+        .book-btn {
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #FFD93D;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .book-btn:hover {
+            background: white;
+        }
+
+
+        /* POPUP */
+
+        .popup {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,0.75);
+
+            align-items: center;
+            justify-content: center;
+
+            z-index: 100;
+        }
+
+        .popup-content {
+            width: 90%;
+            max-width: 450px;
+
+            background: #071952;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow: 0 0 40px rgba(255,217,61,0.4);
+        }
+
+        .popup-content h2 {
+            color: #FFD93D;
+            margin-bottom: 20px;
+        }
+
+        .done-btn {
+            margin-top: 25px;
+
+            padding: 11px 30px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #FFD93D;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media(max-width: 800px) {
+
+            .search-fields {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .search-btn {
+                padding: 15px;
+            }
+
+            .bus-card {
+                grid-template-columns: 1fr 1fr;
+
+                gap: 15px;
+            }
+
+            .bus-info {
+                text-align: left;
+            }
+        }
+
+        @media(max-width: 500px) {
+
+            nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .search-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .bus-card {
+                grid-template-columns: 1fr;
+            }
+
+            .bus-info {
+                text-align: left;
+            }
+
+            .seats {
+                transform: scale(0.85);
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+        🚌 BusGo
+    </div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Bus Tickets</a>
+        <a href="#">My Bookings</a>
+    </nav>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <h1>
+        Travel <span>Smarter</span>, Travel Better 🚌
+    </h1>
+
+    <p>
+        Search buses, choose your seat and book your journey in seconds.
+    </p>
+
+</section>
+
+
+<!-- SEARCH -->
+
+<div class="search-box">
+
+    <div class="search-fields">
+
+        <div class="field">
+
+            <label>FROM</label>
+
+            <select id="from">
+                <option>Bangalore</option>
+                <option>Hyderabad</option>
+                <option>Chennai</option>
+                <option>Mumbai</option>
+                <option>Pune</option>
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>TO</label>
+
+            <select id="to">
+                <option>Hyderabad</option>
+                <option>Bangalore</option>
+                <option>Chennai</option>
+                <option>Mumbai</option>
+                <option>Pune</option>
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>JOURNEY DATE</label>
+
+            <input
+                type="date"
+                id="journeyDate"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>PASSENGERS</label>
+
+            <select id="passengers">
+
+                <option>1 Passenger</option>
+                <option>2 Passengers</option>
+                <option>3 Passengers</option>
+                <option>4 Passengers</option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="search-btn"
+            onclick="searchBuses()"
+        >
+            🔍 Search
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- BUS LIST -->
+
+<div class="container">
+
+    <h2 style="margin-bottom:20px;">
+        🚌 Available Buses
+    </h2>
+
+
+    <div class="bus-list">
+
+
+        <!-- BUS 1 -->
+
+        <div class="bus-card">
+
+            <div class="bus-name">
+
+                <h3>🚌 Orange Travels</h3>
+
+                <p>AC Sleeper • WiFi • Charging</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>09:00 PM</strong>
+
+                <p>Bangalore</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>08:00 AM</strong>
+
+                <p>Hyderabad</p>
+
+            </div>
+
+            <div class="price">
+                ₹899
+            </div>
+
+            <button
+                class="select-bus"
+                onclick="selectBus('Orange Travels', 899)"
+            >
+                Select
+            </button>
+
+        </div>
+
+
+        <!-- BUS 2 -->
+
+        <div class="bus-card">
+
+            <div class="bus-name">
+
+                <h3>🚌 VRL Travels</h3>
+
+                <p>AC Seater • Water Bottle • TV</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>10:30 PM</strong>
+
+                <p>Bangalore</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>09:30 AM</strong>
+
+                <p>Hyderabad</p>
+
+            </div>
+
+            <div class="price">
+                ₹749
+            </div>
+
+            <button
+                class="select-bus"
+                onclick="selectBus('VRL Travels', 749)"
+            >
+                Select
+            </button>
+
+        </div>
+
+
+        <!-- BUS 3 -->
+
+        <div class="bus-card">
+
+            <div class="bus-name">
+
+                <h3>🚌 SRS Travels</h3>
+
+                <p>AC Sleeper • Blanket • Charging</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>08:30 PM</strong>
+
+                <p>Bangalore</p>
+
+            </div>
+
+            <div class="bus-info">
+
+                <strong>07:00 AM</strong>
+
+                <p>Hyderabad</p>
+
+            </div>
+
+            <div class="price">
+                ₹999
+            </div>
+
+            <button
+                class="select-bus"
+                onclick="selectBus('SRS Travels', 999)"
+            >
+                Select
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BOOKING -->
+
+    <section id="bookingSection">
+
+        <h2 class="booking-title">
+            💺 Select Your Seat
+        </h2>
+
+
+        <div class="seat-area">
+
+            <div class="bus-front">
+                DRIVER 🚍
+            </div>
+
+
+            <div class="seats" id="seatContainer">
+            </div>
+
+
+            <div class="legend">
+
+                <div class="legend-item">
+                    <div class="legend-box available"></div>
+                    Available
+                </div>
+
+                <div class="legend-item">
+                    <div class="legend-box selected"></div>
+                    Selected
+                </div>
+
+                <div class="legend-item">
+                    <div class="legend-box booked"></div>
+                    Booked
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div class="summary">
+
+                <p>
+                    🚌 Bus:
+                    <strong id="selectedBus">
+                        -
+                    </strong>
+                </p>
+
+                <p>
+                    📍 Route:
+                    <strong id="route">
+                        Bangalore → Hyderabad
+                    </strong>
+                </p>
+
+                <p>
+                    📅 Date:
+                    <strong id="selectedDate">
+                        -
+                    </strong>
+                </p>
+
+                <p>
+                    💺 Seats:
+                    <strong id="selectedSeats">
+                        None
+                    </strong>
+                </p>
+
+                <p class="total">
+                    Total:
+                    ₹<strong id="totalPrice">0</strong>
+                </p>
+
+
+                <button
+                    class="book-btn"
+                    onclick="bookTicket()"
+                >
+                    🎟️ Confirm Booking
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- POPUP -->
+
+<div
+    class="popup"
+    id="popup"
+>
+
+    <div class="popup-content">
+
+        <h2>
+            🎉 Booking Confirmed!
+        </h2>
+
+        <p id="confirmation"></p>
+
+        <button
+            class="done-btn"
+            onclick="closePopup()"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let selectedBusName = "";
+    let ticketPrice = 0;
+    let selectedSeats = [];
+
+
+    /* DATE */
+
+    const dateInput =
+        document.getElementById("journeyDate");
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+    dateInput.min = today;
+    dateInput.value = today;
+
+
+    /* CREATE SEATS */
+
+    const seatContainer =
+        document.getElementById("seatContainer");
+
+
+    for (let i = 1; i <= 40; i++) {
+
+        const seat =
+            document.createElement("div");
+
+        seat.classList.add("seat");
+
+        seat.innerText = i;
+
+        /*
+            Some seats are already booked
+        */
+
+        if ([3, 7, 12, 18, 25, 31, 36].includes(i)) {
+
+            seat.classList.add("occupied");
+
+        }
+
+
+        seat.onclick = function () {
+
+            if (
+                seat.classList.contains("occupied")
+            ) {
+                return;
+            }
+
+
+            const seatNumber =
+                "A" + i;
+
+
+            if (
+                seat.classList.contains("selected")
+            ) {
+
+                seat.classList.remove("selected");
+
+                selectedSeats =
+                    selectedSeats.filter(
+                        s => s !== seatNumber
+                    );
+
+            }
+
+            else {
+
+                seat.classList.add("selected");
+
+                selectedSeats.push(
+                    seatNumber
+                );
+
+            }
+
+
+            updateSummary();
+
+        };
+
+
+        seatContainer.appendChild(seat);
+
+    }
+
+
+    /* SELECT BUS */
+
+    function selectBus(
+        busName,
+        price
+    ) {
+
+        selectedBusName =
+            busName;
+
+        ticketPrice =
+            price;
+
+
+        document.getElementById(
+            "selectedBus"
+        ).innerText =
+            busName;
+
+
+        document.getElementById(
+            "route"
+        ).innerText =
+
+            document.getElementById("from").value
+            + " → "
+            + document.getElementById("to").value;
+
+
+        document.getElementById(
+            "selectedDate"
+        ).innerText =
+            document.getElementById(
+                "journeyDate"
+            ).value;
+
+
+        document.getElementById(
+            "bookingSection"
+        ).style.display =
+            "block";
+
+
+        document.getElementById(
+            "bookingSection"
+        ).scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* SEARCH */
+
+    function searchBuses() {
+
+        const from =
+            document.getElementById("from").value;
+
+        const to =
+            document.getElementById("to").value;
+
+
+        if (from === to) {
+
+            alert(
+                "From and To locations cannot be the same."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            `Searching buses from ${from} to ${to}...`
+        );
+
+    }
+
+
+    /* SUMMARY */
+
+    function updateSummary() {
+
+        document.getElementById(
+            "selectedSeats"
+        ).innerText =
+
+            selectedSeats.length > 0
+                ? selectedSeats.join(", ")
+                : "None";
+
+
+        const total =
+            selectedSeats.length *
+            ticketPrice;
+
+
+        document.getElementById(
+            "totalPrice"
+        ).innerText =
+            total;
+
+    }
+
+
+    /* BOOK */
+
+    function bookTicket() {
+
+        if (!selectedBusName) {
+
+            alert(
+                "Please select a bus first."
+            );
+
+            return;
+
+        }
+
+
+        if (selectedSeats.length === 0) {
+
+            alert(
+                "Please select at least one seat."
+            );
+
+            return;
+
+        }
+
+
+        const from =
+            document.getElementById("from").value;
+
+        const to =
+            document.getElementById("to").value;
+
+        const date =
+            document.getElementById("journeyDate").value;
+
+        const total =
+            selectedSeats.length *
+            ticketPrice;
+
+
+        document.getElementById(
+            "confirmation"
+        ).innerHTML = `
+
+            <b>${selectedBusName}</b>
+
+            <br><br>
+
+            📍 ${from} → ${to}
+
+            <br>
+
+            📅 ${date}
+
+            <br>
+
+            💺 Seats:
+            ${selectedSeats.join(", ")}
+
+            <br><br>
+
+            <strong>
+                Total Amount: ₹${total}
+            </strong>
+
+            <br><br>
+
+            Have a safe journey! 🚌✨
+
+        `;
+
+
+        document.getElementById(
+            "popup"
+        ).style.display =
+            "flex";
+
+    }
+
+
+    /* CLOSE POPUP */
+
+    function closePopup() {
+
+        document.getElementById(
+            "popup"
+        ).style.display =
+            "none";
+
+    }
+
+</script>
+
+</body>
+</html>
+```
+
